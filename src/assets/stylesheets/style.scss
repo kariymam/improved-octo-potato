@@ -1,0 +1,115 @@
+//*** Icons  ***///
+@use "sass:map";
+
+* {
+ padding: 0;
+ margin: 0;
+}
+
+.visually-hidden {
+ clip: rect(0 0 0 0);
+ overflow: hidden;
+ position: absolute;
+ height: 1px;
+ width: 1px;
+}
+
+$icons: (
+ "search": "\e8b6",
+ "star": "\e838",
+ "check": "\e5ca",
+ "menu": "\e5d2",
+ "trash": "\e872",
+ "archive": "\e149",
+ "report": "\e160",
+ "more": "\e5d3",
+ "compose": "\f88d",
+ "draft": "\e66d",
+ "inbox": "\e156",
+ "reply": "\e15e",
+ "forward": "\e154"
+);
+
+@each $name, $code in $icons {
+ .#{$name}-icon:before {
+  content: $code;
+  font-family: "Material Icons";
+ }
+}
+
+/* TODO: Use Sass functions to add SVGs in base64 Data URI to icons map for fallbacks */
+
+// $search: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjNWY2MzY4Ij48cGF0aCBkPSJNMzgwLTMyMHEtMTA5IDAtMTg0LjUtNzUuNVQxMjAtNTgwcTAtMTA5IDc1LjUtMTg0LjVUMzgwLTg0MHExMDkgMCAxODQuNSA3NS41VDY0MC01ODBxMCA0NC0xNCA4M3QtMzggNjlsMjI0IDIyNHExMSAxMSAxMSAyOHQtMTEgMjhxLTExIDExLTI4IDExdC0yOC0xMUw1MzItMzcycS0zMCAyNC02OSAzOHQtODMgMTRabTAtODBxNzUgMCAxMjcuNS01Mi41VDU2MC01ODBxMC03NS01Mi41LTEyNy41VDM4MC03NjBxLTc1IDAtMTI3LjUgNTIuNVQyMDAtNTgwcTAgNzUgNTIuNSAxMjcuNVQzODAtNDAwWiIvPjwvc3ZnPg==);
+
+// @mixin prefers($code, $fallback) {
+//  background: center / 100% $fallback no-repeat;
+//  @supports (font-family: "Material Icons") {
+//   content: $code;
+//  }
+// }
+
+// @each $name, $code in $icons {
+//  .#{$name}-icon:before {
+//   @include prefers($code, $search); /* for example search is the fall back for .search-icon */
+//  }
+// }
+
+button.icon-btn {
+ --pd: 0.25rem;
+
+ display: flex;
+ flex-flow: row nowrap;
+ anchor-name: --btn;
+ aspect-ratio: var(--ratio-square);
+ background-color: transparent;
+ border-radius: var(--radius-round);
+ border: var(--border-size-1) solid var(--gray-2);
+ & span:first-child {
+  padding: var(--pd);
+  place-content: center;
+  width: 2rem;
+  height: 2rem;
+ }
+ &:hover {
+  background-color: var(--gray-2);
+ }
+}
+
+/* TODO: Tooltip for icon btns */
+
+[tooltip] {
+ position: absolute;
+ margin: 0;
+ inset: auto;
+ width: fit-content;
+ white-space: nowrap;
+ top: calc(anchor(bottom) + var(--pd));
+ position-anchor: --btn;
+ transform: scale(0.8);
+ opacity: 0;
+ transition-property: opacity, transform;
+ transition: all 100ms ease-in-out;
+}
+
+[tooltip-position="center"] {
+ position-area: bottom;
+}
+
+[tooltip-position="left"] {
+ left: anchor(50%);
+ position-area: bottom right;
+}
+
+@mixin tooltip-ui {
+ background: var(--gray-3);
+ border-radius: var(--radius-2);
+ padding: var(--pd);
+}
+
+button.icon-btn:hover [tooltip] {
+ transform: scale(1);
+ opacity: 1;
+ & {
+  @include tooltip-ui;
+ }
+}
