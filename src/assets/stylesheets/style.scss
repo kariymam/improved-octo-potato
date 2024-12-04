@@ -19,7 +19,7 @@ $icons: (
  "star": "\e838",
  "check": "\e5ca",
  "menu": "\e5d2",
- "trash": "\e872",
+ "delete": "\e872",
  "archive": "\e149",
  "report": "\e160",
  "more": "\e5d3",
@@ -33,9 +33,17 @@ $icons: (
 @each $name, $code in $icons {
  .#{$name}-icon:before {
   content: $code;
-  font-family: "Material Icons";
  }
 }
+
+$test: white;
+
+@function icon($name, $fallback) {
+    @debug $name, $fallback;
+    @return mdi-svg($name, $fallback);
+}
+
+@debug "test variable: #{$test}";
 
 /* TODO: Use Sass functions to add SVGs in base64 Data URI to icons map for fallbacks */
 
