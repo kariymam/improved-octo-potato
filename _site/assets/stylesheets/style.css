@@ -12,54 +12,67 @@
 }
 
 .search-icon:before {
+  background: center/100% url("search") no-repeat;
   content: "\e8b6";
 }
 
 .star-icon:before {
+  background: center/100% url("star") no-repeat;
   content: "\e838";
 }
 
 .check-icon:before {
+  background: center/100% url("check") no-repeat;
   content: "\e5ca";
 }
 
 .menu-icon:before {
+  background: center/100% url("menu") no-repeat;
   content: "\e5d2";
 }
 
 .delete-icon:before {
+  background: center/100% url("delete") no-repeat;
   content: "\e872";
 }
 
 .archive-icon:before {
+  background: center/100% url("archive") no-repeat;
   content: "\e149";
 }
 
 .report-icon:before {
+  background: center/100% url("report") no-repeat;
   content: "\e160";
 }
 
 .more-icon:before {
+  background: center/100% url("more") no-repeat;
   content: "\e5d3";
 }
 
 .compose-icon:before {
+  background: center/100% url("compose") no-repeat;
   content: "\f88d";
 }
 
 .draft-icon:before {
+  background: center/100% url("draft") no-repeat;
   content: "\e66d";
 }
 
 .inbox-icon:before {
+  background: center/100% url("inbox") no-repeat;
   content: "\e156";
 }
 
 .reply-icon:before {
+  background: center/100% url("reply") no-repeat;
   content: "\e15e";
 }
 
 .forward-icon:before {
+  background: center/100% url("forward") no-repeat;
   content: "\e154";
 }
 
