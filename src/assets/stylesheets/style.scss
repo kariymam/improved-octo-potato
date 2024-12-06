@@ -18,14 +18,23 @@
 $icons: "search", "star", "check", "menu", "delete", "archive", "report", "more",
   "compose", "edit", "inbox", "reply", "forward";
 
-@function icon($name) {
-  @return map.get(mdi-svg($name), "#{$name}");
+$icon-color: blue;
+
+@function icon($name, $format) {
+  @if $format == svg {
+    @return map.get(mdi-svg($name), "#{$name}");
+  } @else if $format == png {
+    @return map.get(mdi-svg($name), "#{$name}-png");
+  } @else {
+    @error "Unknown direction #{$format}.";
+  }
 }
 
 @each $name in $icons {
   .#{$name}-icon {
-    mask: url(#{icon($name)}) no-repeat center/24px;
-    background: #000;
+    mask: url(#{icon($name, png)}) no-repeat center/24px;
+    mask: url(#{icon($name, svg)}) no-repeat center/24px;
+    background: $icon-color;
     background-position: center;
     background-repeat: no-repeat;
   }

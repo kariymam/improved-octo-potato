@@ -5,14 +5,20 @@ const { path, sass } = require("./utils");
 const { SassString, SassMap } = sass;
 
 let svgs = {};
+const assetsDir = "/assets/svg";
 
 const searchDir = async () => {
-  const files = globSync(path.resolve(__dirname, "../assets/**/*.svg"));
-  // console.log("Found SVG files:", files);
+  const files = globSync(path.resolve(__dirname, "../**/*.svg"));
+  console.log("Found SVG files:", files);
 
   const svgPromises = files.map(async (file) => {
     try {
       const fileName = path.basename(file);
+      const filepath = path.format({
+        root: __dirname,
+        dir: `${assetsDir}`,
+        base: `${fileName}`,
+      });
       const data = fs.readFileSync(file, "utf8");
 
       // Convert SVG to PNG Data URI
@@ -23,7 +29,7 @@ const searchDir = async () => {
       return {
         fileName,
         svg: {
-          filepath: `/assets/svg/${fileName}`,
+          filepath,
           dataUri,
         },
       };
