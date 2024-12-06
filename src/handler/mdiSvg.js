@@ -1,6 +1,4 @@
 const path = require("path");
-const fs = require("node:fs");
-const svgToMiniDataURI = require("mini-svg-data-uri");
 const { globSync } = require("glob");
 const sass = require("sass");
 const { SassString } = sass;
@@ -9,13 +7,12 @@ let svgs = {};
 
 const searchDir = () => {
   const files = globSync(path.resolve(__dirname, "../assets/**/*.svg"));
-  console.log("Found SVG files:", files);
+  // console.log("Found SVG files:", files);
   for (const file of files) {
     try {
-      const data = fs.readFileSync(file, "utf8");
       const fileName = path.basename(file);
-      svgs[fileName] = svgToMiniDataURI(data);
-      console.log(`Processed: ${fileName}`);
+      svgs[fileName] = `url(/assets/svg/${fileName})`;
+      // console.log(`Processed: ${fileName}`);
     } catch (err) {
       console.error(err);
     }
@@ -31,8 +28,17 @@ module.exports = {
     return svgs;
   },
   mdiSvg: (args) => {
+    // Clean up scss arg
     const icons = args.toString().replace(/['"]+/g, "");
-    const image = svgs[`${icons}.svg`];
-    return new SassString(`url("${image}")`, { quotes: false });
+
+    // Fuzzy matching logic
+    const matchingKey = Object.keys(svgs).find((key) =>
+      key.toLowerCase().startsWith(icons.toLowerCase())
+    );
+
+    // Return the matched SVG or null if no match is found
+    const image = matchingKey ? svgs[matchingKey] : null;
+
+    return new SassString(image, { quotes: false });
   },
 };

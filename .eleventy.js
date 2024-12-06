@@ -4,7 +4,6 @@ const SassHandler = require("./src/handler/sassHandler.js");
 module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy('./src/assets/svg');
     eleventyConfig.addPassthroughCopy('./src/assets/stylesheets/*.css');
-    eleventyConfig.addWatchTarget("./src");
 
     // Add SASS support
     eleventyConfig.addTemplateFormats("scss");

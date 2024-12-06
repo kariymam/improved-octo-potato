@@ -38,17 +38,10 @@ $icon-sz: 2rem;
 
 @each $name, $code in $icons {
   .#{$name}-icon {
-    background-image: icon($name);
+    mask: icon($name) no-repeat center/24px;
+    background: #000;
     background-position: center;
     background-repeat: no-repeat;
-  }
-  @supports (font-family: "Material Symbols Rounded") {
-    .#{$name}-icon:before {
-      content: $code;
-      place-self: center;
-      width: 100%;
-      height: 100%;
-    }
   }
 }
 
