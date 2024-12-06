@@ -1,4 +1,5 @@
 //*** Icons  ***///
+@use "sass:list";
 @use "sass:map";
 
 * {
@@ -14,31 +15,16 @@
   width: 1px;
 }
 
-$icons: (
-  "search": "\e8b6",
-  "star": "\e838",
-  "check": "\e5ca",
-  "menu": "\e5d2",
-  "delete": "\e872",
-  "archive": "\e149",
-  "report": "\e160",
-  "more": "\e5d3",
-  "compose": "\f88d",
-  "draft": "\e66d",
-  "inbox": "\e156",
-  "reply": "\e15e",
-  "forward": "\e154",
-);
+$icons: "search", "star", "check", "menu", "delete", "archive", "report", "more",
+  "compose", "edit", "inbox", "reply", "forward";
 
-@function icon($fallback) {
-  @return mdi-svg($fallback);
+@function icon($name) {
+  @return map.get(mdi-svg($name), "#{$name}");
 }
 
-$icon-sz: 2rem;
-
-@each $name, $code in $icons {
+@each $name in $icons {
   .#{$name}-icon {
-    mask: icon($name) no-repeat center/24px;
+    mask: url(#{icon($name)}) no-repeat center/24px;
     background: #000;
     background-position: center;
     background-repeat: no-repeat;

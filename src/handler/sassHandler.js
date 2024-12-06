@@ -1,6 +1,4 @@
-// const fs = require('node:fs');
-const path = require("path");
-const sass = require("sass");
+const { path, sass } = require("./utils");
 const { mdiSvg } = require("./mdiSvg");
 
 module.exports = {
@@ -8,10 +6,10 @@ module.exports = {
 
   compile: async function (inputContent, inputPath) {
     let parsed = path.parse(inputPath);
-    let result = sass.compileString(inputContent, {
+    let result = await sass.compileStringAsync(inputContent, {
       loadPaths: [parsed.dir || ".", this.config.dir.includes],
       functions: {
-        "mdi-svg($fallback)": mdiSvg,
+        "mdi-svg($name)": mdiSvg,
       },
     });
 

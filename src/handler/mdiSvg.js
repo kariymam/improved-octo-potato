@@ -1,35 +1,68 @@
-const path = require("path");
+const fs = require("node:fs");
+const sharp = require("sharp");
 const { globSync } = require("glob");
-const sass = require("sass");
-const { SassString } = sass;
+const { path, sass } = require("./utils");
+const { SassString, SassMap } = sass;
 
 let svgs = {};
 
-const searchDir = () => {
+const searchDir = async () => {
   const files = globSync(path.resolve(__dirname, "../assets/**/*.svg"));
   // console.log("Found SVG files:", files);
-  for (const file of files) {
+
+  const svgPromises = files.map(async (file) => {
     try {
       const fileName = path.basename(file);
-      svgs[fileName] = `url(/assets/svg/${fileName})`;
-      // console.log(`Processed: ${fileName}`);
+      const data = fs.readFileSync(file, "utf8");
+
+      // Convert SVG to PNG Data URI
+      const pngBuffer = await sharp(Buffer.from(data)).png().toBuffer();
+      const base64String = pngBuffer.toString("base64");
+      const dataUri = `data:image/png;base64,${base64String}`;
+
+      return {
+        fileName,
+        svg: {
+          filepath: `/assets/svg/${fileName}`,
+          dataUri,
+        },
+      };
     } catch (err) {
-      console.error(err);
+      console.error(`Error processing file ${file}:`, err);
+      return null; // Skip this file if there's an error
     }
-  }
+  });
+
+  // Wait for all promises to resolve
+  const resolvedSvgs = await Promise.all(svgPromises);
+
+  // Populate `svgs` object
+  resolvedSvgs.forEach((entry) => {
+    if (entry) {
+      svgs[entry.fileName] = entry.svg;
+    }
+  });
+
+  // console.log("SVGs processed:", svgs);
 };
 
-// Populate `svgs`
-searchDir();
+// Initialize `svgs`
+(async () => {
+  await searchDir();
+})();
 
 module.exports = {
   get svgs() {
-    // Getter ensures the latest version of `svgs`
-    return svgs;
+    return svgs; // Ensure the latest version of `svgs` is returned
   },
-  mdiSvg: (args) => {
-    // Clean up scss arg
-    const icons = args.toString().replace(/['"]+/g, "");
+  mdiSvg: (name) => {
+    if (Object.keys(svgs).length === 0) {
+      throw new Error("SVGs have not been loaded yet!");
+    }
+    // console.log("Current SVGs:", svgs);
+
+    // Clean up scss argument
+    const icons = name.toString().replace(/['"]+/g, "");
 
     // Fuzzy matching logic
     const matchingKey = Object.keys(svgs).find((key) =>
@@ -37,8 +70,26 @@ module.exports = {
     );
 
     // Return the matched SVG or null if no match is found
-    const image = matchingKey ? svgs[matchingKey] : null;
+    const svgPath = matchingKey ? svgs[matchingKey].filepath : null;
+    const dataUri = matchingKey ? svgs[matchingKey].dataUri : null;
 
-    return new SassString(image, { quotes: false });
+    const buildSassStr = (value) =>
+      !value
+        ? new SassString("", { quotes: false })
+        : new SassString(value, { quotes: false });
+
+    const svgValue = buildSassStr(svgPath);
+    const pngValue = buildSassStr(dataUri);
+
+    // if (!svg || !png) {
+    //   throw new Error(`No matching SVG found for "${name}".`);
+    // }
+
+    const map = new Map([
+      [new SassString(icons), svgValue],
+      [new SassString(`${icons}-png`), pngValue],
+    ]);
+
+    return new SassMap(map);
   },
 };
