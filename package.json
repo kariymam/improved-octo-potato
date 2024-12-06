@@ -16,7 +16,6 @@
     "sass": "^1.82.0"
   },
   "devDependencies": {
-    "mini-svg-data-uri": "^1.4.4",
     "sharp": "^0.33.5"
   }
 }
