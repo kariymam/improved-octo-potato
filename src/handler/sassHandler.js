@@ -1,5 +1,5 @@
 const { path, sass } = require("./utils");
-const { mdiSvg } = require("./mdiSvg");
+const { mdiSvg } = require("./sassFunctions");
 
 module.exports = {
   outputFileExtension: "css",

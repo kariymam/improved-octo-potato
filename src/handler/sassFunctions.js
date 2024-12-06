@@ -7,7 +7,7 @@ const { SassString, SassMap } = sass;
 let svgs = {};
 const assetsDir = "/assets/svg";
 
-const searchDir = async () => {
+const getSVGObjData = async () => {
   const files = globSync(path.resolve(__dirname, "../**/*.svg"));
   console.log("Found SVG files:", files);
 
@@ -54,7 +54,7 @@ const searchDir = async () => {
 
 // Initialize `svgs`
 (async () => {
-  await searchDir();
+  await getSVGObjData();
 })();
 
 module.exports = {
