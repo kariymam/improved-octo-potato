@@ -16,8 +16,8 @@ const getSVGObjData = async () => {
       const fileName = path.basename(file);
       const filepath = path.format({
         root: __dirname,
-        dir: `${assetsDir}`,
-        base: `${fileName}`,
+        dir: assetsDir,
+        base: fileName,
       });
       const data = fs.readFileSync(file, "utf8");
 
@@ -49,7 +49,7 @@ const getSVGObjData = async () => {
     }
   });
 
-  // console.log("SVGs processed:", svgs);
+  console.log("SVGs processed:", svgs);
 };
 
 // Initialize `svgs`
@@ -82,7 +82,7 @@ module.exports = {
     const buildSassStr = (value) =>
       !value
         ? new SassString("", { quotes: false })
-        : new SassString(value, { quotes: false });
+        : new SassString(`url(${value})`, { quotes: true });
 
     const svgValue = buildSassStr(svgPath);
     const pngValue = buildSassStr(dataUri);
